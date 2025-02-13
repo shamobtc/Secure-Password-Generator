@@ -1,0 +1,187 @@
+{% load static %}
+{% load i18n %}
+{% load strength_tags %} 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Secure Password Generator</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="{% static 'css/style.css' %}" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <div class="row justify-content-center mt-5">
+            <div class="col-md-8 col-lg-6">
+                <div class="card shadow-lg">
+                    <div class="card-header bg-primary text-white">
+                        <h3 class="mb-0">Secure Password Generator</h3>
+                    </div>
+                    <div class="card-body">
+                        <form method="POST">
+                            {% csrf_token %}
+                            <div class="password-display mb-4">
+                                {% if password %}
+                                <div class="input-group">
+                                    <input type="text" class="form-control" id="password" 
+                                           value="{{ password }}" readonly>
+                                    <button type="button" class="btn btn-success" 
+                                            onclick="copyPassword()">
+                                        Copy
+                                    </button>
+                                </div>
+                                {% endif %}
+                            </div>
+
+                            <div class="mb-4">
+                                <label for="length" class="form-label">
+                                    Password Length: <span id="lengthValue">{{ length }}</span>
+                                </label>
+                                <input type="range" class="form-range" id="length" name="length"
+                                       min="6" max="32" value="{{ length }}">
+                            </div>
+
+                            <div class="row mb-4">
+                                <div class="col-6">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" 
+                                               name="uppercase" id="uppercase" {% if uppercase %}checked{% endif %}>
+                                        <label class="form-check-label" for="uppercase">
+                                            Include Uppercase
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox"
+                                               name="lowercase" id="lowercase" {% if lowercase %}checked{% endif %}>
+                                        <label class="form-check-label" for="lowercase">
+                                            Include Lowercase
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox"
+                                               name="digits" id="digits" {% if digits %}checked{% endif %}>
+                                        <label class="form-check-label" for="digits">
+                                            Include Digits
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox"
+                                               name="symbols" id="symbols" {% if symbols %}checked{% endif %}>
+                                        <label class="form-check-label" for="symbols">
+                                            Include Symbols
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary w-100 py-2">
+                                Generate Password
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add language selector at the top -->
+<div class="text-end mb-3">
+    <div class="btn-group">
+        <button type="button" class="btn btn-sm btn-outline-light dropdown-toggle" 
+                data-bs-toggle="dropdown">
+            {% get_current_language as LANGUAGE_CODE %}
+            {{ LANGUAGE_CODE|upper }}
+        </button>
+        <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="/i18n/setlang/?language=en">English</a></li>
+            <li><a class="dropdown-item" href="/i18n/setlang/?language=es">Español</a></li>
+            <li><a class="dropdown-item" href="/i18n/setlang/?language=fr">Français</a></li>
+            <li><a class="dropdown-item" href="/i18n/setlang/?language=ha">Hausa</a></li>
+        </ul>
+    </div>
+</div>
+
+<!-- Add strength indicator -->
+<div class="password-strength mb-3">
+    <div class="progress" style="height: 10px">
+        <div class="progress-bar" id="strengthBar" 
+             role="progressbar" style="width: 0%"></div>
+    </div>
+    <small id="strengthText" class="text-muted"></small>
+</div>
+
+<!-- Add password history -->
+<div class="password-history mt-4">
+    <h5>{% trans "Recent Passwords" %}</h5>
+    <ul class="list-group">
+        {% for entry in request.session.password_history %}
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+            <span class="text-muted">••••••••</span>
+            <div>
+                <span class="badge bg-{{ entry.strength|get_strength_color }} me-2">
+                    {{ entry.strength|get_strength_text }}
+                </span>
+                <small class="text-muted" data-expires="{{ entry.expires|date:'U' }}">
+                    {% trans "Expires in" %} <span class="countdown"></span>
+                </small>
+            </div>
+        </li>
+        {% endfor %}
+    </ul>
+</div>
+
+<!-- Add expiration timer script -->
+<script>
+    // Update strength display
+    const strength = {{ strength|default:0 }};
+    const strengthBar = document.getElementById('strengthBar');
+    const strengthText = document.getElementById('strengthText');
+    const strengthClasses = ['bg-danger', 'bg-danger', 'bg-warning', 'bg-info', 'bg-success'];
+    const strengthLabels = [
+        '{% trans "Very Weak" %}', 
+        '{% trans "Weak" %}', 
+        '{% trans "Moderate" %}', 
+        '{% trans "Strong" %}', 
+        '{% trans "Very Strong" %}'
+    ];
+
+    if(strengthBar) {
+        strengthBar.style.width = `${(strength + 1) * 25}%`;
+        strengthBar.classList.add(strengthClasses[strength]);
+        strengthText.textContent = strengthLabels[strength];
+    }
+
+    // Update countdown timers
+    function updateCountdowns() {
+        document.querySelectorAll('.countdown').forEach(el => {
+            const expires = parseInt(el.parentElement.dataset.expires);
+            const remaining = expires - Math.floor(Date.now() / 1000);
+            const minutes = Math.floor(remaining / 60);
+            el.textContent = `${minutes}m ${remaining % 60}s`;
+        });
+    }
+    setInterval(updateCountdowns, 1000);
+    updateCountdowns();
+</script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function copyPassword() {
+            const passwordField = document.getElementById('password');
+            passwordField.select();
+            document.execCommand('copy');
+            alert('Password copied to clipboard!');
+        }
+
+        // Update length display
+        const lengthSlider = document.getElementById('length');
+        const lengthValue = document.getElementById('lengthValue');
+        lengthSlider.oninput = function() {
+            lengthValue.textContent = this.value;
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,79 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-02-13 16:04+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: templates/generator/index.html:115
+msgid "Recent Passwords"
+msgstr ""
+
+#: templates/generator/index.html:125
+msgid "Expires in"
+msgstr ""
+
+#: templates/generator/index.html:141
+msgid "Very Weak"
+msgstr ""
+
+#: templates/generator/index.html:142
+msgid "Weak"
+msgstr ""
+
+#: templates/generator/index.html:143
+msgid "Moderate"
+msgstr ""
+
+#: templates/generator/index.html:144
+msgid "Strong"
+msgstr ""
+
+#: templates/generator/index.html:145
+msgid "Very Strong"
+msgstr ""
+
+
+#: templates/generator/index.html:10
+msgid "Secure Password Generator"
+msgstr "Mai Ƙirƙirar Kalmar Sirri"
+
+#: templates/generator/index.html:15
+msgid "Generate Password"
+msgstr "Ƙirƙiri Kalmar Sirri"
+
+#: templates/generator/index.html:20
+msgid "Copy"
+msgstr "Kwafi"
+
+#: templates/generator/index.html:25
+msgid "Password Length"
+msgstr "Tsawon Kalmar Sirri"
+
+#: templates/generator/index.html:30
+msgid "Include Uppercase"
+msgstr "Haɗa Manyan Haruffa"
+
+#: templates/generator/index.html:35
+msgid "Include Lowercase"
+msgstr "Haɗa Ƙananan Haruffa"
+
+#: templates/generator/index.html:40
+msgid "Include Digits"
+msgstr "Haɗa Lambobi"
+
+#: templates/generator/index.html:45
+msgid "Include Symbols"
+msgstr "Haɗa Alamomi"

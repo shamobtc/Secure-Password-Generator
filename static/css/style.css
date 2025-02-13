@@ -1,0 +1,57 @@
+body {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+}
+
+.card {
+    border: none;
+    border-radius: 15px;
+    overflow: hidden;
+}
+
+.card-header {
+    border-radius: 15px 15px 0 0 !important;
+}
+
+.form-range::-webkit-slider-thumb {
+    background: #4a5568;
+}
+
+.form-range::-moz-range-thumb {
+    background: #4a5568;
+}
+
+.form-check-input:checked {
+    background-color: #4a5568;
+    border-color: #4a5568;
+}
+
+.btn-primary {
+    background-color: #4a5568;
+    border: none;
+    transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+    background-color: #2d3748;
+    transform: translateY(-2px);
+}
+
+.input-group-text {
+    background-color: #e2e8f0;
+}
+
+/* Add strength indicator styles */
+.progress-bar {
+    transition: width 0.5s ease;
+}
+
+/* Password history styles */
+.password-history .badge {
+    min-width: 80px;
+}
+
+.bg-danger { background-color: #dc3545 !important; }
+.bg-warning { background-color: #ffc107 !important; }
+.bg-info { background-color: #0dcaf0 !important; }
+.bg-success { background-color: #198754 !important; }
